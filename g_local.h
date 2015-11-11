@@ -970,7 +970,7 @@ struct edict_s
 	vec3_t		absmin, absmax, size;
 	solid_t		solid;
 	int			clipmask;
-	edict_t		*owner;
+	edict_t		*owner;  //pointer to the owner 
 
 
 	// DO NOT MODIFY ANYTHING ABOVE THIS, THE SERVER
@@ -1046,7 +1046,7 @@ struct edict_s
 	int			viewheight;		// height above origin where eyesight is determined
 	int			takedamage;
 	int			dmg;
-	int			radius_dmg;
+	int			radius_dmg;  //radius damage?
 	float		dmg_radius;
 	int			sounds;			//make this a spawntemp var?
 	int			count;
