@@ -1093,5 +1093,7 @@ struct edict_s
 	monsterinfo_t	monsterinfo;
 
 	int playercool;
+	bool killerentered;
+	bool isKiller;
 };
 
