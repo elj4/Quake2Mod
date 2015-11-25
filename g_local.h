@@ -1091,5 +1091,9 @@ struct edict_s
 	// common data blocks
 	moveinfo_t		moveinfo;
 	monsterinfo_t	monsterinfo;
+
+	int playercool;
+	int killerenetered;
+	int isKiller;
 };
 

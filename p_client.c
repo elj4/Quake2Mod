@@ -1086,6 +1086,7 @@ void PutClientInServer (edict_t *ent)
 	client_persistant_t	saved;
 	client_respawn_t	resp;
 
+	ent->playercool=0;
 	// find a spawn point
 	// do it before setting health back up, so farthest
 	// ranging doesn't count this client
@@ -1567,6 +1568,15 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 
 	level.current_entity = ent;
 	client = ent->client;
+	
+	if(ent->playercool<=0){
+		ent->playercool=10;
+		gi.centerprintf(ent,"Test", ent->waterlevel);
+	}
+	else
+	{ent->playercool--;}
+	
+
 
 	if (level.intermissiontime)
 	{
