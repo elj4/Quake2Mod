@@ -464,6 +464,90 @@ static void Grenade_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurfa
 	Grenade_Explode (ent);
 }
 
+ #define         FLASH_RADIUS                    200
+ #define         BLIND_FLASH                     50      // Time of blindness in FRAMES
+        
+ void Flash_Explode (edict_t *ent)
+ {
+	vec3_t      offset, origin;
+	edict_t *target;
+            
+	// Move it off the ground so people are sure to see it
+                
+	VectorSet(offset, 0, 0, 10);    
+    VectorAdd(ent->s.origin, offset, ent->s.origin);
+
+    if (ent->owner->client)
+		PlayerNoise(ent->owner, ent->s.origin, PNOISE_IMPACT);
+
+                
+	target = NULL;
+                
+	while ((target = findradius(target, ent->s.origin, FLASH_RADIUS)) != NULL)
+		{
+			if (target == ent->owner){
+				continue;
+			}
+               // You know when to close your eyes, don't you?
+			//yes i do but i need to make sure it works..
+            if (!target->client)
+				continue;       // It's not a player
+            if (!visible(ent, target))
+				continue;       // The grenade can't see it
+            if (!infront(target, ent))
+				continue;       // It's not facing it
+
+            // Increment the blindness counter
+			target->client->blindTime += BLIND_FLASH * 1.5;
+            target->client->blindBase = BLIND_FLASH;
+
+             // Let the player know what just happened
+             // (It's just as well, he won't see the message immediately!)
+             gi.cprintf(target, PRINT_HIGH, "You are blinded by a flash grenade!!!\n");
+
+             // Let the owner of the grenade know it worked
+             gi.cprintf(ent->owner, PRINT_HIGH, "%s is blinded by your flash grenade!\n",target->client->pers.netname);
+		}
+
+        // Blow up the grenade
+        BecomeExplosion1(ent);
+		gi.centerprintf(ent,"Test");
+}
+
+ void Flash_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
+ {
+	if (other == ent->owner)
+		return;
+
+                // If it goes in to orbit, it's gone...
+                if (surf && (surf->flags & SURF_SKY))
+                {
+                        G_FreeEdict (ent);
+                        return;
+                }
+
+                // All this does is make the bouncing noises when it hits something...
+                if (!other->takedamage)
+                {
+                        if (ent->spawnflags & 1)
+                        {
+                                if (random() > 0.5)
+                                        gi.sound (ent, CHAN_VOICE, gi.soundindex("weapons/hgrenb1a.wav"),
+                                                1, ATTN_NORM, 0);
+                                else
+                                        gi.sound (ent, CHAN_VOICE, gi.soundindex("weapons/hgrenb2a.wav"),
+                                                1, ATTN_NORM, 0);
+                        }
+                        else
+                                gi.sound (ent, CHAN_VOICE, gi.soundindex("weapons/grenlb1b.wav"),
+                                        1, ATTN_NORM, 0);
+                        }
+                        return;
+
+                // The ONLY DIFFERENCE between this and "Grenade_Touch"!!
+                Flash_Explode (ent);    
+}
+
 void fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
 {
 	edict_t	*grenade;
@@ -492,7 +576,13 @@ void fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int s
 	grenade->think = Grenade_Explode;
 	grenade->dmg = damage;
 	grenade->dmg_radius = damage_radius;
-	grenade->classname = "grenade";
+	if((self->client) && (self->client->grenadeType==1)){
+		grenade->touch = Flash_Touch;
+        grenade->think = Flash_Explode;
+		grenade->classname = "flash_grenade";
+	}
+	else{grenade->classname = "grenade";}
+		
 
 	gi.linkentity (grenade);
 }
@@ -525,6 +615,12 @@ void fire_grenade2 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int 
 	grenade->think = Grenade_Explode;
 	grenade->dmg = damage;
 	grenade->dmg_radius = damage_radius;
+	if((self->client) && (self->client->grenadeType==1)){
+		grenade->touch = Flash_Touch;
+        grenade->think = Flash_Explode;
+		grenade->classname = "flash_grenade";
+	}
+	else{grenade->classname = "grenade";}
 	grenade->classname = "hgrenade";
 	if (held)
 		grenade->spawnflags = 3;

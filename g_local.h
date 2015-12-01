@@ -938,6 +938,8 @@ struct gclient_s
 	int			flood_whenhead;		// head pointer for when said
 
 	float		respawn_time;		// can respawn when time > this
+	int			grenadeType;
+	float		blindTime, blindBase;
 
 	edict_t		*chase_target;		// player we are chasing
 	qboolean	update_chase;		// need to update chase info?
@@ -1095,5 +1097,8 @@ struct edict_s
 	int playercool;
 	int killerenetered;
 	int isKiller;
+
+	#define GRENADE_NORMAL	0;
+	#define	GRENADE_FLASH	1;
 };
 

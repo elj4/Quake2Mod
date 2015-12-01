@@ -1166,6 +1166,7 @@ void PutClientInServer (edict_t *ent)
 	VectorCopy (maxs, ent->maxs);
 	VectorClear (ent->velocity);
 
+
 	// clear playerstate values
 	memset (&ent->client->ps, 0, sizeof(client->ps));
 
@@ -1212,6 +1213,10 @@ void PutClientInServer (edict_t *ent)
 	ent->s.angles[ROLL] = 0;
 	VectorCopy (ent->s.angles, client->ps.viewangles);
 	VectorCopy (ent->s.angles, client->v_angle);
+
+	client->grenadeType= 0;
+	client->blindBase=0;
+	client->blindTime=0;
 
 	// spawn a spectator
 	if (client->pers.spectator) {
@@ -1571,7 +1576,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 	
 	if(ent->playercool<=0){
 		ent->playercool=10;
-		gi.centerprintf(ent,"Test", ent->waterlevel);
+		//gi.centerprintf(ent,"Test", ent->waterlevel);
 	}
 	else
 	{ent->playercool--;}
