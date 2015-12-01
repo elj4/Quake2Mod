@@ -739,7 +739,7 @@ ROCKET
 
 void Weapon_RocketLauncher_Fire (edict_t *ent)
 {
-	vec3_t	offset, start;
+	vec3_t	offset, start, temp;
 	vec3_t	forward, right;
 	int		damage;
 	float	damage_radius;
@@ -761,9 +761,26 @@ void Weapon_RocketLauncher_Fire (edict_t *ent)
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_rocket (ent, start, forward, damage, 650, damage_radius, radius_damage);
-	fire_rocket (ent, start, forward, damage,100, damage_radius, radius_damage);
-	fire_rocket (ent, start, forward, damage, 50, damage_radius, radius_damage);
+	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);
+	VectorSet(temp,0,32,0);
+	VectorAdd(temp,start,temp);
+	fire_rocket (ent, temp, forward, damage,300, damage_radius, radius_damage);
+	VectorSet(temp,0,-32,0);
+	VectorAdd(temp,start,temp);
+	fire_rocket (ent, temp, forward, damage, 300, damage_radius, radius_damage);
+	VectorSet(temp,32,-32,0);
+	VectorAdd(temp,start,temp);
+	fire_rocket (ent, temp, forward, damage, 300, damage_radius, radius_damage);
+	VectorSet(temp,-32,-32,0);
+	VectorAdd(temp,start,temp);
+	fire_rocket (ent, temp, forward, damage, 300, damage_radius, radius_damage);
+	VectorSet(temp,32,32,0);
+	VectorAdd(temp,start,temp);
+	fire_rocket (ent, temp, forward, damage, 300, damage_radius, radius_damage);
+	VectorSet(temp,-32,32,0);
+	VectorAdd(temp,start,temp);
+	fire_rocket (ent, temp, forward, damage, 300, damage_radius, radius_damage);
+
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
