@@ -487,6 +487,7 @@ void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 
 	self->takedamage = DAMAGE_YES;
 	self->movetype = MOVETYPE_TOSS;
+	
 
 	self->s.modelindex2 = 0;	// remove linked weapon model
 
@@ -507,6 +508,7 @@ void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 		LookAtKiller (self, inflictor, attacker);
 		self->client->ps.pmove.pm_type = PM_DEAD;
 		ClientObituary (self, inflictor, attacker);
+		self->client->resp.spectator = true;//spec
 		TossClientWeapon (self);
 		if (deathmatch->value)
 			Cmd_Help_f (self);		// show scores
@@ -527,6 +529,7 @@ void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 	self->client->breather_framenum = 0;
 	self->client->enviro_framenum = 0;
 	self->flags &= ~FL_POWER_ARMOR;
+	
 
 	if (self->health < -40)
 	{	// gib
@@ -568,11 +571,14 @@ void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 			}
 			gi.sound (self, CHAN_VOICE, gi.soundindex(va("*death%i.wav", (rand()%4)+1)), 1, ATTN_NORM, 0);
 		}
+		self->client->resp.spectator = true;
 	}
 
 	self->deadflag = DEAD_DEAD;
 
+	
 	gi.linkentity (self);
+	
 }
 
 //=======================================================================
@@ -608,6 +614,7 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.max_slugs		= 50;
 
 	client->pers.connected = true;
+	
 }
 
 
@@ -1085,11 +1092,14 @@ void PutClientInServer (edict_t *ent)
 	int		i;
 	client_persistant_t	saved;
 	client_respawn_t	resp;
+	client->resp.spectator = true; //something else..
+	
 
 	ent->playercool=0;
 	// find a spawn point
 	// do it before setting health back up, so farthest
 	// ranging doesn't count this client
+	//respawn (edict_t *self);
 	SelectSpawnPoint (ent, spawn_origin, spawn_angles);
 
 	index = ent-g_edicts-1;
@@ -1570,6 +1580,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 	edict_t	*other;
 	int		i, j;
 	pmove_t	pm;
+	
 
 	level.current_entity = ent;
 	client = ent->client;
