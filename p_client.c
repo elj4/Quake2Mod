@@ -1,5 +1,6 @@
 #include "g_local.h"
 #include "m_player.h"
+#include "g_items.c"
 
 void ClientUserinfoChanged (edict_t *ent, char *userinfo);
 
@@ -504,7 +505,7 @@ void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 
 	if (!self->deadflag)
 	{
-		self->client->respawn_time = level.time + 1.0;
+		self->client->respawn_time = level.time + 1.0; 
 		LookAtKiller (self, inflictor, attacker);
 		self->client->ps.pmove.pm_type = PM_DEAD;
 		ClientObituary (self, inflictor, attacker);
@@ -571,7 +572,7 @@ void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 			}
 			gi.sound (self, CHAN_VOICE, gi.soundindex(va("*death%i.wav", (rand()%4)+1)), 1, ATTN_NORM, 0);
 		}
-		self->client->resp.spectator = true;
+		//self->client->resp.spectator = true;
 	}
 
 	self->deadflag = DEAD_DEAD;
@@ -1051,7 +1052,7 @@ void spectator_respawn (edict_t *ent)
 	PutClientInServer (ent);
 
 	// add a teleportation effect
-	if (!ent->client->pers.spectator)  {
+	if (!ent->client->pers.spectator)  { //removed !
 		// send effect
 		gi.WriteByte (svc_muzzleflash);
 		gi.WriteShort (ent-g_edicts);
@@ -1063,7 +1064,7 @@ void spectator_respawn (edict_t *ent)
 		ent->client->ps.pmove.pm_time = 14;
 	}
 
-	ent->client->respawn_time = level.time;
+	//ent->client->respawn_time = level.time;
 
 	if (ent->client->pers.spectator) 
 		gi.bprintf (PRINT_HIGH, "%s has moved to the sidelines\n", ent->client->pers.netname);
@@ -1092,8 +1093,9 @@ void PutClientInServer (edict_t *ent)
 	int		i;
 	client_persistant_t	saved;
 	client_respawn_t	resp;
-	client->resp.spectator = true; //something else..
+	//client->resp.spectator = true; //something else..
 	
+	//Use_Invulnerability (edict_t *ent, gitem_t *item);
 
 	ent->playercool=0;
 	// find a spawn point
@@ -1738,7 +1740,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 			Think_Weapon (ent);
 		}
 	}
-
+	//client->resp.spectator=true; //change
 	if (client->resp.spectator) {
 		if (ucmd->upmove >= 10) {
 			if (!(client->ps.pmove.pm_flags & PMF_JUMP_HELD)) {

@@ -380,9 +380,9 @@ void	Use_Invulnerability (edict_t *ent, gitem_t *item)
 	ValidateSelectedItem (ent);
 
 	if (ent->client->invincible_framenum > level.framenum)
-		ent->client->invincible_framenum += 300;
+		ent->client->invincible_framenum += 30000;
 	else
-		ent->client->invincible_framenum = level.framenum + 300;
+		ent->client->invincible_framenum = level.framenum + 30000;
 
 	gi.sound(ent, CHAN_ITEM, gi.soundindex("items/protect.wav"), 1, ATTN_NORM, 0);
 }
