@@ -465,7 +465,7 @@ static void Grenade_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurfa
 }
 
  #define         FLASH_RADIUS                    200
- #define         BLIND_FLASH                     50      // Time of blindness in FRAMES
+ #define         BLIND_FLASH                     50    // Time of blindness in FRAMES
         
  void Flash_Explode (edict_t *ent)
  {
@@ -545,7 +545,7 @@ static void Grenade_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurfa
                         return;
 
                 // The ONLY DIFFERENCE between this and "Grenade_Touch"!!
-                Flash_Explode (ent);    
+                Flash_Explode(ent);    
 }
 
 void fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
@@ -576,7 +576,7 @@ void fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int s
 	grenade->think = Grenade_Explode;
 	grenade->dmg = damage;
 	grenade->dmg_radius = damage_radius;
-	if((self->client) && (self->client->grenadeType==1)){
+	if((self->client) && (self->client->grenadeType==GRENADE_FLASH)){
 		grenade->touch = Flash_Touch;
         grenade->think = Flash_Explode;
 		grenade->classname = "flash_grenade";
@@ -615,7 +615,7 @@ void fire_grenade2 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int 
 	grenade->think = Grenade_Explode;
 	grenade->dmg = damage;
 	grenade->dmg_radius = damage_radius;
-	if((self->client) && (self->client->grenadeType==1)){
+	if((self->client) && (self->client->grenadeType==GRENADE_FLASH)){
 		grenade->touch = Flash_Touch;
         grenade->think = Flash_Explode;
 		grenade->classname = "flash_grenade";

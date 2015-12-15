@@ -1098,7 +1098,7 @@ struct edict_s
 	int killerenetered;
 	int isKiller;
 
-	#define GRENADE_NORMAL	0;
-	#define	GRENADE_FLASH	1;
+	#define GRENADE_NORMAL	0
+	#define	GRENADE_FLASH	1
 };
 

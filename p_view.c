@@ -423,7 +423,7 @@ void SV_CalcBlend (edict_t *ent)
 
 	if (ent->client->blindTime > 0)
       {
-               float alpha = ent->client->blindTime / ent->client->blindBase;
+               float alpha = ent->client->blindTime /ent->client->blindBase;
                if (alpha > 1)
                        alpha = 1;
                SV_AddBlend (1, 1, 1, alpha, ent->client->ps.blend);
